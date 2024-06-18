@@ -11,7 +11,7 @@ namespace Word_Counter
     {
         static void Main()
         {
-            //WordCount.WordCount wc = new WordCount.WordCount();
+            WordCount.WordCount wordCount = new WordCount.WordCount();
             UI.UI ui = new UI.UI();
             string[] files = ui.GetFiles();
 
@@ -19,6 +19,8 @@ namespace Word_Counter
             {
                 Console.WriteLine(file);
             }
+
+            wordCount.ProcessDocs(files);
 
             Console.WriteLine("Press Enter to exit...");
             Console.ReadLine();
