@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text.RegularExpressions;
 using Microsoft.Office.Interop.Word;
 
 namespace Word_Counter.WordCount
@@ -23,7 +22,6 @@ namespace Word_Counter.WordCount
                 //Closese the doc without saving it.
                 doc.Close(false);
             }
-            Word.Quit();
         }
     }
 }
