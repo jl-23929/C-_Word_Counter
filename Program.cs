@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Word_Counter.UI;
+using Microsoft.Office.Interop.Word;
+using System.Xml;
 
 namespace Word_Counter
 {
@@ -13,6 +15,9 @@ namespace Word_Counter
         {
             WordCount.WordCount wordCount = new WordCount.WordCount();
             UI.UI ui = new UI.UI();
+            Processing.Processing processing = new Processing.Processing();
+            Application Word = new Application();
+
             string[] files = ui.GetFiles();
 
             foreach (string file in files)
@@ -20,7 +25,7 @@ namespace Word_Counter
                 Console.WriteLine(file);
             }
 
-            wordCount.ProcessDocs(files);
+            wordCount.Count(files, Word);
 
             Console.WriteLine("Press Enter to exit...");
             Console.ReadLine();
