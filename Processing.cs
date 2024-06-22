@@ -15,8 +15,12 @@ namespace Word_Counter.Processing
 
                 foreach(Range range in doc.StoryRanges)
                 {
-                    string text = range.Text;
-                    range.Text = Regex.Replace(text, @"[.]", "");
+                    Find findObject = range.Find;
+                    findObject.ClearFormatting();
+                    findObject.Text = ".";
+                    findObject.Replacement.ClearFormatting();
+                    findObject.MatchWildcards = false;
+                    findObject.Execute(Replace: WdReplace.wdReplaceAll);
                 }
                 doc.SaveAs(file + "modified.docx");
                 doc.Close();
