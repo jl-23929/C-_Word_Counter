@@ -5,7 +5,8 @@ namespace Word_Counter.UI
 {
     public class UI
     {
-        public string[] GetFiles() {
+        public string[] GetFiles()
+        {
 
             Console.Write("Enter Directory Path: ");
             string directoryPath = Console.ReadLine();

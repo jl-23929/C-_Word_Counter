@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Word_Counter.UI;
 using Microsoft.Office.Interop.Word;
 using System.Xml;
+using System.IO;
 
 namespace Word_Counter
 {
@@ -27,7 +28,7 @@ namespace Word_Counter
 
             wordCount.Count(files, Word);
             processing.removeSymbols(files, Word);
-            wordCount.Count(files, Word);
+
             Word.Quit();
             Console.WriteLine("Press Enter to exit...");
             Console.ReadLine();

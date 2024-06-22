@@ -17,7 +17,7 @@ namespace Word_Counter.WordCount
                 int wordCount = doc.ComputeStatistics(WdStatistic.wdStatisticWords, IncludeFootnotesAndEndnotes: true);
 
                 //Prints the word count.
-                Console.WriteLine("Word Count 2: " + wordCount);
+                Console.WriteLine("Word Count: " + wordCount);
 
                 //Closese the doc without saving it.
                 doc.Close(false);

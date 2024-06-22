@@ -13,14 +13,19 @@ namespace Word_Counter.Processing
             {
                 Document doc = Word.Documents.Open(file);
 
-                foreach(Range range in doc.StoryRanges)
+                string[] symbols = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "=", "-", "{", "}", "[", "]", "|", "\\", ":", ";", "\"", "'", "<", ">", ",", ".", "?", "/", "`", "~" };
+
+                foreach (Range range in doc.StoryRanges)
                 {
-                    Find findObject = range.Find;
-                    findObject.ClearFormatting();
-                    findObject.Text = ".";
-                    findObject.Replacement.ClearFormatting();
-                    findObject.MatchWildcards = false;
-                    findObject.Execute(Replace: WdReplace.wdReplaceAll);
+                    foreach(string symbol in symbols)
+                    {
+                        Find findObject = range.Find;
+                        findObject.ClearFormatting();
+                        findObject.Text = symbol;
+                        findObject.Replacement.ClearFormatting();
+                        findObject.MatchWildcards = false;
+                        findObject.Execute(Replace: WdReplace.wdReplaceAll);
+                    }
                 }
                 doc.SaveAs(file + "modified.docx");
                 doc.Close();
