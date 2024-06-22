@@ -8,44 +8,23 @@ namespace Word_Counter.WordCount
     {
         public void ProcessDocs(string[] files)
         {
+            //Creates a new instance of Word.
             Application Word = new Application();
 
             foreach (string file in files)
             {
+                //Opens the document.
                 Document doc = Word.Documents.Open(file);
-                //Ask Word for Word Count (Which will be wrong, because it includes everything, including paragraph markers.
-                int wordCount = doc.Words.Count;
-                Console.WriteLine("Word count: " + wordCount);
+                //Asks Word for the correct word count.
+                int wordCount = doc.ComputeStatistics(WdStatistic.wdStatisticWords, IncludeFootnotesAndEndnotes: true);
 
-                string textContent = doc.Content.Text.Trim();
-                Console.WriteLine("Word Count 2: " + countWords(textContent));
+                //Prints the word count.
+                Console.WriteLine("Word Count 2: " + wordCount);
 
-                Document newDoc = Word.Documents.Add();
-
-                // Insert the content
-                newDoc.Content.Text = textContent;
-
-                // Generate a new file path
-                string newFilePath = file + "modified.docx";
-
-                // Save the new document
-                newDoc.SaveAs2(newFilePath);
-                doc.Close();
+                //Closese the doc without saving it.
+                doc.Close(false);
             }
             Word.Quit();
-        }
-
-        private int countWords(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return 0;
-            }
-
-            // Split the text using a regex that matches words
-            string[] words = Regex.Split(text, @"\W+");
-            // Filter out empty entries and count the result
-            return words.Length;
         }
     }
 }
