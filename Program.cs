@@ -26,8 +26,8 @@ namespace Word_Counter
                 Console.WriteLine(file);
             }
 
-            wordCount.Count(files, Word);
             processing.removeSymbols(files, Word);
+            wordCount.Count(files, Word);
 
             Word.Quit();
             Console.WriteLine("Press Enter to exit...");
