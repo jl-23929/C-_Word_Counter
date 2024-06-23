@@ -17,7 +17,7 @@ namespace Word_Counter.Processing
 
                 foreach (Paragraph paragraph in doc.Paragraphs)
                 {
-                    string[] referenceTypes = { "*[(][0-9]{4}[)].*." };
+                    string[] referenceTypes = { "*. [(][0-9]{4}[)].*", "*. [(][0-9]{4}[!)]@[)].*", "*. [(]n.d.[)].*" };
 
                     foreach (string reference in referenceTypes)
                     {
@@ -48,7 +48,7 @@ namespace Word_Counter.Processing
                         // Find and highlight all occurrences
                         while (findObject.Execute())
                         {
-                            range.HighlightColorIndex = WdColorIndex.wdYellow;
+                            range.HighlightColorIndex = WdColorIndex.wdBrightGreen;
                         }
 
                     }
