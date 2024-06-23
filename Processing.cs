@@ -13,7 +13,7 @@ namespace Word_Counter.Processing
             {
                 Document doc = Word.Documents.Open(file);
 
-
+                RemoveBibliography(doc);
 
                 foreach (Paragraph paragraph in doc.Paragraphs)
                 {
@@ -102,6 +102,26 @@ namespace Word_Counter.Processing
                 doc.Close();
             }
 
+        }
+
+        public void RemoveBibliography(Document doc) {
+
+            Range rng = doc.Content;
+            Find findObject = rng.Find;
+            findObject.Text = "Bibliography";
+            findObject.MatchCase = true;
+            findObject.MatchWholeWord = true;
+
+            if (findObject.Execute())
+            {
+                // Move the start of the range to the end of the found text
+                rng.Start = rng.End;
+                // Move the end of the range to the end of the document
+                rng.End = doc.Content.End;
+                // Clear the range
+                rng.Delete();
+
+            }
         }
     }
 }
