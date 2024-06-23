@@ -15,12 +15,31 @@ namespace Word_Counter.Processing
 
 
 
-                foreach (Range range in doc.StoryRanges)
+                foreach (Paragraph paragraph in doc.Paragraphs)
                 {
-                    Console.WriteLine(range.Text);
-                    /*string[] referenceTypes = { };
+                    string[] referenceTypes = { "*[(][0-9]{4}[)].*." };
 
                     foreach (string reference in referenceTypes)
+                    {
+                        Find findObject = paragraph.Range.Find;
+                        findObject.Text = reference;
+                        findObject.MatchWildcards = true;
+
+                        // Find and highlight all occurrences
+                        while (findObject.Execute())
+                        {
+                            paragraph.Range.HighlightColorIndex = WdColorIndex.wdYellow;
+                        }
+
+                    }
+
+                }
+
+                foreach (Range range in doc.StoryRanges)
+                {
+                    string[] inTextReferenceTypes = { "[(][!)]@, [0-9][0-9][0-9][0-9][)]", "[(][!)]@, [0-9][0-9][0-9][0-9]?[)]", "[(][!)]@, n.d.[)]" };
+
+                    foreach (string reference in inTextReferenceTypes)
                     {
                         Find findObject = range.Find;
                         findObject.Text = reference;
@@ -33,19 +52,6 @@ namespace Word_Counter.Processing
                         }
 
                     }
-
-                    string[] inTextReferenceTypes = { "[(][!)]@, [0-9][0-9][0-9][0-9][)]", "[(][!)]@, [0-9][0-9][0-9][0-9]?[)]", "[(][!)]@, n.d.[)]" };
-
-                    foreach (string reference in inTextReferenceTypes)
-                    {
-                        Find findObject = range.Find;
-                        findObject.ClearFormatting();
-                        findObject.Text = reference;
-                        findObject.Replacement.ClearFormatting();
-                        findObject.MatchWildcards = false;
-                        findObject.Execute(Replace: WdReplace.wdReplaceAll);
-
-                    } */
 
                 }
 
