@@ -13,7 +13,7 @@ namespace Word_Counter.Processing
             {
                 Document doc = Word.Documents.Open(file);
 
-                string[] referenceTypes = { "[(]*, n.d.[)]", "[(]*[!(]*, [0-9][0-9][0-9][0-9][)]" };
+                string[] referenceTypes = { "[(][!)]@, n.d.[)]", "[(][!)]@, [0-9][0-9][0-9][0-9][)]" };
 
                 foreach (Range range in doc.StoryRanges)
                 {
@@ -27,7 +27,7 @@ namespace Word_Counter.Processing
                         findObject.Execute(Replace: WdReplace.wdReplaceAll);
                     }
                 }
-                /*
+                
                 string[] symbols = {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "=", "-", "{", "}", "[", "]", "|", "\\", ":", ";", "\"", "'", "<", ">", ",", ".", "?", "/", "`", "~" };
 
                 foreach (Range range in doc.StoryRanges)
@@ -41,7 +41,7 @@ namespace Word_Counter.Processing
                         findObject.MatchWildcards = false;
                         findObject.Execute(Replace: WdReplace.wdReplaceAll);
                     }
-                } */
+                }
                 doc.SaveAs(file + "modified.docx");
                 doc.Close();
             }
