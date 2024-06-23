@@ -26,7 +26,7 @@ namespace Word_Counter
                 Console.WriteLine(file);
             }
 
-            processing.removeSymbols(files, Word);
+            processing.RemoveSymbols(files, Word);
             wordCount.Count(files, Word);
 
             Word.Quit();
