@@ -14,26 +14,24 @@ namespace Word_Counter.Processing
                 Document doc = Word.Documents.Open(file);
 
                 RemoveBibliography(doc);
-
-                foreach (Paragraph paragraph in doc.Paragraphs)
-                {
-                    string[] referenceTypes = { "*. [(][0-9]{4}[)].*", "*. [(][0-9]{4}[!)]@[)].*", "*. [(]n.d.[)].*" };
-
-                    foreach (string reference in referenceTypes)
+                
+                    foreach (Paragraph paragraph in doc.Paragraphs)
                     {
-                        Find findObject = paragraph.Range.Find;
-                        findObject.Text = reference;
-                        findObject.MatchWildcards = true;
+                        string[] referenceTypes = { "*. [(][0-9]{4}[)].*", "*. [(][0-9]{4}[!)]@[)].*", "*. [(]n.d.[)].*" };
 
-                        // Find and highlight all occurrences
-                        while (findObject.Execute())
+                        foreach (string reference in referenceTypes)
                         {
-                            paragraph.Range.HighlightColorIndex = WdColorIndex.wdYellow;
+
+                            Find findObject = range.Find;
+                            findObject.ClearFormatting();
+                            findObject.Text = reference;
+                            findObject.Replacement.ClearFormatting();
+                            findObject.MatchWildcards = true;
+                            findObject.Execute(Replace: WdReplace.wdReplaceAll);
+
                         }
 
                     }
-
-                }
 
                 foreach (Range range in doc.StoryRanges)
                 {
@@ -41,15 +39,13 @@ namespace Word_Counter.Processing
 
                     foreach (string reference in inTextReferenceTypes)
                     {
-                        Find findObject = range.Find;
-                        findObject.Text = reference;
-                        findObject.MatchWildcards = true;
 
-                        // Find and highlight all occurrences
-                        while (findObject.Execute())
-                        {
-                            range.HighlightColorIndex = WdColorIndex.wdBrightGreen;
-                        }
+                        Find findObject = range.Find;
+                        findObject.ClearFormatting();
+                        findObject.Text = reference;
+                        findObject.Replacement.ClearFormatting();
+                        findObject.MatchWildcards = true;
+                        findObject.Execute(Replace: WdReplace.wdReplaceAll);
 
                     }
 
@@ -104,7 +100,8 @@ namespace Word_Counter.Processing
 
         }
 
-        public void RemoveBibliography(Document doc) {
+        public void RemoveBibliography(Document doc)
+        {
 
             Range rng = doc.Content;
             Find findObject = rng.Find;
