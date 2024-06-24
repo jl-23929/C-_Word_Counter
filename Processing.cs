@@ -17,11 +17,7 @@ namespace Word_Counter.Processing
                 {
                     RemoveBibliography(doc);
 
-                    string[] referenceTypes = {
-                        "*. [(][0-9]{4}[)].*",
-                        "*. [(][0-9]{4}[!)]@[)].*",
-                        "*. [(]n.d.[)].*"
-                    };
+                    
 
                     string[] inTextReferenceTypes = {
                         "[(][!)]@, [0-9][0-9][0-9][0-9][)]",
@@ -45,9 +41,32 @@ namespace Word_Counter.Processing
                         " rpm ", " CO2 "
                     };
 
-                    // Combine all patterns into a single array
-                    string[][] allPatterns = { referenceTypes, inTextReferenceTypes, replaceSymbols, removeSymbols };
+                    string[] referenceTypes = {
+                        "*. [(][0-9]{4}[)].*",
+                        "*. [(][0-9]{4}[!)]@[)].*",
+                        "*. [(]n.d.[)].*"
+                    };
 
+                    foreach (Paragraph paragraph in doc.Paragraphs)
+                    {
+                        foreach (string reference in referenceTypes)
+                        {
+                            Find findObject = paragraph.Range.Find;
+                            findObject.ClearFormatting();
+                            findObject.Text = reference;
+                            findObject.Replacement.ClearFormatting();
+                            findObject.MatchWildcards = true;
+                            while (findObject.Execute(Replace: WdReplace.wdReplaceAll)) { 
+                            paragraph.Range.HighlightColorIndex = WdColorIndex.wdYellow;
+                            
+                            }
+                                                       
+                        }
+                    }
+
+                    // Combine all patterns into a single array
+                    string[][] allPatterns = {inTextReferenceTypes, replaceSymbols, removeSymbols };
+                    /*
                     foreach (Range range in doc.StoryRanges)
                     {
                         foreach (string[] patterns in allPatterns)
@@ -59,12 +78,12 @@ namespace Word_Counter.Processing
                                 findObject.Text = pattern;
                                 findObject.Replacement.ClearFormatting();
                                 findObject.Replacement.Text = ""; // Specify replacement text if needed
-                                findObject.MatchWildcards = patterns == referenceTypes || patterns == inTextReferenceTypes;
+                                findObject.MatchWildcards = patterns == inTextReferenceTypes;
                                 findObject.Execute(Replace: WdReplace.wdReplaceAll);
                             }
                         }
                     }
-
+                    */
                     doc.SaveAs(file + "modified.docx");
                 }
                 finally
