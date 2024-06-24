@@ -41,33 +41,18 @@ namespace Word_Counter.Processing
                         " rpm ", " CO2 "
                     };
 
-                    string[] referenceTypes = {
+                  /*  string[] referenceTypes = {
                         "*. [(][0-9]{4}[)].*",
                         "*. [(][0-9]{4}[!)]@[)].*",
                         "*. [(]n.d.[)].*"
-                    };
+                    }; */
 
-                    string[] referenceTypes2 = { @".*\\.\\s\\(\\d{4}\\)\\.\\s.*", @".*\\.\\s\\(\\d{4}[^)]*\\)\\.\\s.*", @".*\\.\\s\\(n\\.d\\.\\)\\.\\s.*" };
-
-                    string wildcardPattern = @"^13\(*\([0-9]{4}\)*\).*13";
-
-                    // Find and delete all matching references
-                    Find findObject = wordApp.Selection.Find;
-                    findObject.ClearFormatting();
-                    findObject.Text = wildcardPattern;
-                    findObject.Replacement.ClearFormatting();
-                    findObject.Replacement.Text = "";
-                    findObject.Forward = true;
-                    findObject.Wrap = WdFindWrap.wdFindContinue;
-                    findObject.Format = false;
-                    findObject.MatchWildcards = true;
-                    findObject.Execute(Replace: WdReplace.wdReplaceAll);
-
-
+                    string[] referenceTypes = { @"^13[!^13]@ [(][0-9]{4}[)].[!^13]@^13", @"^13[!^13]@ [(][0-9]{4}[!)]@[)].[!^13]@^13" };
+                    
 
                     // Combine all patterns into a single array
-                    string[][] allPatterns = { inTextReferenceTypes, replaceSymbols, removeSymbols };
-                    /*
+                    string[][] allPatterns = { referenceTypes, inTextReferenceTypes, replaceSymbols, removeSymbols };
+                    
                     foreach (Range range in doc.StoryRanges)
                     {
                         foreach (string[] patterns in allPatterns)
@@ -78,13 +63,14 @@ namespace Word_Counter.Processing
                                 findObject.ClearFormatting();
                                 findObject.Text = pattern;
                                 findObject.Replacement.ClearFormatting();
-                                findObject.Replacement.Text = ""; // Specify replacement text if needed
-                                findObject.MatchWildcards = patterns == inTextReferenceTypes;
+                                findObject.Replacement.Text = " ";
+                                findObject.MatchWildcards = patterns == referenceTypes || patterns == inTextReferenceTypes;
                                 findObject.Execute(Replace: WdReplace.wdReplaceAll);
+
                             }
                         }
                     }
-                    */
+                    
                     doc.SaveAs(file + "modified.docx");
                 }
                 finally
