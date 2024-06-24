@@ -17,7 +17,7 @@ namespace Word_Counter.Processing
                 {
                     RemoveBibliography(doc);
 
-                    
+
 
                     string[] inTextReferenceTypes = {
                         "[(][!)]@, [0-9][0-9][0-9][0-9][)]",
@@ -47,25 +47,26 @@ namespace Word_Counter.Processing
                         "*. [(]n.d.[)].*"
                     };
 
-                    foreach (Paragraph paragraph in doc.Paragraphs)
-                    {
-                        foreach (string reference in referenceTypes)
-                        {
-                            Find findObject = paragraph.Range.Find;
-                            findObject.ClearFormatting();
-                            findObject.Text = reference;
-                            findObject.Replacement.ClearFormatting();
-                            findObject.MatchWildcards = true;
-                            while (findObject.Execute(Replace: WdReplace.wdReplaceAll)) { 
-                            paragraph.Range.HighlightColorIndex = WdColorIndex.wdYellow;
-                            
-                            }
-                                                       
-                        }
-                    }
+                    string[] referenceTypes2 = { @".*\\.\\s\\(\\d{4}\\)\\.\\s.*", @".*\\.\\s\\(\\d{4}[^)]*\\)\\.\\s.*", @".*\\.\\s\\(n\\.d\\.\\)\\.\\s.*" };
+
+                    string wildcardPattern = @"^13\(*\([0-9]{4}\)*\).*13";
+
+                    // Find and delete all matching references
+                    Find findObject = wordApp.Selection.Find;
+                    findObject.ClearFormatting();
+                    findObject.Text = wildcardPattern;
+                    findObject.Replacement.ClearFormatting();
+                    findObject.Replacement.Text = "";
+                    findObject.Forward = true;
+                    findObject.Wrap = WdFindWrap.wdFindContinue;
+                    findObject.Format = false;
+                    findObject.MatchWildcards = true;
+                    findObject.Execute(Replace: WdReplace.wdReplaceAll);
+
+
 
                     // Combine all patterns into a single array
-                    string[][] allPatterns = {inTextReferenceTypes, replaceSymbols, removeSymbols };
+                    string[][] allPatterns = { inTextReferenceTypes, replaceSymbols, removeSymbols };
                     /*
                     foreach (Range range in doc.StoryRanges)
                     {
