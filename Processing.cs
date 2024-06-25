@@ -10,7 +10,7 @@ namespace Word_Counter.Processing
     {
         public void RemoveSymbols(string[] files, Application wordApp)
         {
-            Parallel.ForEach(files, file =>
+            foreach(string file in files)            
             {
                 Document doc = wordApp.Documents.Open(file);
                 try
@@ -41,7 +41,7 @@ namespace Word_Counter.Processing
                         " rpm ", " CO2 "
                     };
 
-                  /*  string[] referenceTypes = {
+                  /*  string[] referenceTypes = {   
                         "*. [(][0-9]{4}[)].*",
                         "*. [(][0-9]{4}[!)]@[)].*",
                         "*. [(]n.d.[)].*"
@@ -72,12 +72,13 @@ namespace Word_Counter.Processing
                     }
                     
                     doc.SaveAs(file + "modified.docx");
+                    Console.WriteLine("Processed doc");
                 }
                 finally
                 {
                     doc.Close(false);
                 }
-            });
+            }
         }
 
         public void RemoveBibliography(Document doc)
