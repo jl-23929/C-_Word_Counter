@@ -10,30 +10,22 @@ namespace Word_Counter.Processing
     {
         public void RemoveSymbols(string[] files, Application wordApp)
         {
-            foreach(string file in files)            
-            {
-                Document doc = wordApp.Documents.Open(file);
-                try
-                {
-                    RemoveBibliography(doc);
 
-
-
-                    string[] inTextReferenceTypes = {
+            string[] inTextReferenceTypes = {
                         "[(][!)]@, [0-9][0-9][0-9][0-9][)]",
                         "[(][!)]@, [0-9][0-9][0-9][0-9]?[)]",
                         "[(][!)]@, n.d.[)]"
                     };
 
-                    string[] replaceSymbols = {
+            string[] replaceSymbols = {
                         "1", "2", "3", "4", "5", "6", "7", "8", "9", "0",
                         ",", ".", "?", "!", ":", ";", "(", ")", "[", "]", "{", "}",
                         "/", "\\", "*", "+", "=", "|", "&", "^", "%", "@", "~",
                         "`", "'", "°", "𝜃", "×", "±", "≈", "∆", ">", "<", ">=",
                         "<=", "=", "ϕ", "φ", "Φ", "Ω", "Ω", "∑", "∞", "√"
-                    }; 
+                    };
 
-                    string[] removeSymbols = {
+            string[] removeSymbols = {
                         "-", " M ", " V ", " Z ", " C ", " Q ", " Cu ", " Zn ",
                         " Ag ", " NO ", " KNO ", " MnO ", " NaCl ", " kPa ",
                         " mL ", " L ", " aq ", " l ", " s ", " g ", " x ", " KWh ",
@@ -41,38 +33,46 @@ namespace Word_Counter.Processing
                         " rpm ", " CO2 "
                     };
 
+            string[] referenceTypes = { @"^13[!^13]@ [(][0-9]{4}[)].[!^13]@^13", @"^13[!^13]@ [(][0-9]{4}[!)]@[)].[!^13]@^13" };
+
+            foreach (string file in files)            
+            {
+                Document doc = wordApp.Documents.Open(file);
+                try
+                {
+                    RemoveBibliography(doc);
+
                   /*  string[] referenceTypes = {   
                         "*. [(][0-9]{4}[)].*",
                         "*. [(][0-9]{4}[!)]@[)].*",
                         "*. [(]n.d.[)].*"
                     }; */
-
-                    string[] referenceTypes = { @"^13[!^13]@ [(][0-9]{4}[)].[!^13]@^13", @"^13[!^13]@ [(][0-9]{4}[!)]@[)].[!^13]@^13" };
-                    
+                  
 
                     // Combine all patterns into a single array
                     string[][] allPatterns = { referenceTypes, inTextReferenceTypes, replaceSymbols, removeSymbols };
-                    
-                    foreach (Range range in doc.StoryRanges)
+
+                    Parallel.ForEach(doc.StoryRanges.Cast<Range>(), range =>
                     {
                         foreach (string[] patterns in allPatterns)
                         {
+                            bool matchWildcards = patterns == referenceTypes || patterns == inTextReferenceTypes;
+                            Find findObject = range.Find;
+                            findObject.ClearFormatting();
+                            findObject.Replacement.ClearFormatting();
+                            findObject.Replacement.Text = " ";
+
                             foreach (string pattern in patterns)
                             {
-                                Find findObject = range.Find;
-                                findObject.ClearFormatting();
                                 findObject.Text = pattern;
-                                findObject.Replacement.ClearFormatting();
-                                findObject.Replacement.Text = " ";
-                                findObject.MatchWildcards = patterns == referenceTypes || patterns == inTextReferenceTypes;
+                                findObject.MatchWildcards = matchWildcards;
                                 findObject.Execute(Replace: WdReplace.wdReplaceAll);
-
                             }
                         }
-                    }
-                    
+                    }); 
+
                     doc.SaveAs(file + "modified.docx");
-                    Console.WriteLine("Processed doc");
+                    Console.WriteLine("Processed doc: " + file);
                 }
                 finally
                 {
