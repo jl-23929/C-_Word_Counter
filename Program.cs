@@ -1,63 +1,37 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Word_Counter.UI;
 using Microsoft.Office.Interop.Word;
+using System.Xml;
+using System.IO;
 
-class Program
+namespace Word_Counter
 {
-    static void Main()
+    internal class Program
     {
-        Application wordApp = new Application();
-        Document doc = null;
-
-        try
+        static void Main()
         {
-            // Open the Word document
-            object fileName = @"C:\path\to\your\document.docx";
-            object missing = Type.Missing;
-            doc = wordApp.Documents.Open(ref fileName, ref missing, ref missing, ref missing);
+            WordCount.WordCount wordCount = new WordCount.WordCount();
+            UI.UI ui = new UI.UI();
+            Processing.Processing processing = new Processing.Processing();
+            Application Word = new Application();
 
-            
-            string[] commonReferencePatterns = { "(", ")" };
+            string[] files = ui.GetFiles();
 
-            foreach (Paragraph paragraph in doc.Paragraphs)
+            foreach (string file in files)
             {
-                string text = paragraph.Range.Text;
-
-                // Check if the paragraph contains a potential reference
-                if (ContainsAPAReference(text, commonReferencePatterns))
-                {
-                    // If found, delete the paragraph
-                    paragraph.Range.Delete();
-                }
+                Console.WriteLine(file);
             }
 
-            // Save the modified document
-            doc.SaveAs2(@"C:\path\to\your\modified_document.docx");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine("Error: " + ex.Message);
-        }
-        finally
-        {
-            if (doc != null)
-            {
-                doc.Close();
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(doc);
-            }
-            wordApp.Quit();
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(wordApp);
-        }
-    }
+            processing.RemoveSymbols(files, Word);
+            wordCount.Count(files, Word);
 
-    static bool ContainsAPAReference(string text, string[] patterns)
-    {
-        foreach (string pattern in patterns)
-        {
-            if (text.Contains(pattern))
-            {
-                return true;
-            }
+            Word.Quit();
+            Console.WriteLine("Press Enter to exit...");
+            Console.ReadLine();
         }
-        return false;
     }
 }
