@@ -27,6 +27,7 @@ namespace Word_Counter
             }
 
             processing.RemoveSymbols(files, Word);
+            files = Directory.GetFiles(ui.directoryPath, "*modified.docx");
             wordCount.Count(files, Word);
 
             Word.Quit();
