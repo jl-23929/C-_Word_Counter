@@ -5,11 +5,13 @@ namespace Word_Counter.UI
 {
     public class UI
     {
+
+        public string directoryPath;
         public string[] GetFiles()
         {
 
             Console.Write("Enter Directory Path: ");
-            string directoryPath = Console.ReadLine();
+            directoryPath = Console.ReadLine();
 
             if (!Directory.Exists(directoryPath))
             {

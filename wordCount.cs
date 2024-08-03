@@ -5,6 +5,7 @@ namespace Word_Counter.WordCount
 {
     public class WordCount
     {
+
         public void Count(string[] files, Application Word)
         {
             //Creates a new instance of Word.
