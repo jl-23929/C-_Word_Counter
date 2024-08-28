@@ -17,6 +17,7 @@ namespace Word_Counter
             WordCount.WordCount wordCount = new WordCount.WordCount();
             UI.UI ui = new UI.UI();
             Processing.Processing processing = new Processing.Processing();
+            Processing2.Processing2 processing2 = new Processing2.Processing2();
             Application Word = new Application();
 
             string[] files = ui.GetFiles();
